@@ -1,5 +1,6 @@
 # from dll_stack import Stack
 # from dll_queue import Queue
+from collections import deque
 import sys
 sys.path.append('../queue_and_stack')
 
@@ -66,15 +67,67 @@ class BinarySearchTree:
         else:
             cb(self.value)
 
+    # LECTURE SOLUTION TO FOR EACH
+    # at least O(n), could be worse depending on the callback
+    def for_each2(self, cb):
+        # apply the callback
+        cb(self.value)
+        # base case: the node has no children
+        # call the cb on the children of this noe
+        # check that the node has children
+        if self.left:
+            self.left.for_each(cb)
+        if self.right:
+            self.right.for_each(cb)
+
+    def depth_for_each(self, cb):
+        stack = []
+
+        # add the root of the tree to the stack
+        stack.append(self)
+
+        # loop so long as the stack still has elements
+        while len(stack) > 0:
+            current_node = stack.pop()
+            # check if the right child exists
+            if current_node.right:
+                stack.append(current_node.right)
+            # check if the left child exists
+            if current_node.left:
+                stack.append(current_node.left)
+            cb(current_node.value)
+
+    def breadth_for_each(self, cb):
+        # depth first : stack
+        # breadth-first : queue
+        q = deque()  # create your queue
+        q.append(self)  # append the root
+
+        while len(q) > 0:
+            current_node = q.popleft()
+            if current_node.left:  # if we have nodes to the left...
+                q.append(current_node.left)  # ...append it!
+            if current_node.right:  # if we have nodes to the right...
+                q.append(current_node.right)  # ...append it!
+            cb(current_node.value)
+
     # DAY 2 Project -----------------------
 
     # Print all the values in order from low to high
     # Hint:  Use a recursive, depth first traversal
     def in_order_print(self, node):
-        pass
+        if not node:
+            return
+        self.in_order_print(node.left)
+        self.in_order_print(node.right)
+        # if self.left:
+        #     self.left.in_order_print(self.value)
+        # if self.right:
+        #     self.right.in_order_print(self.value)
 
     # Print the value of every node, starting with the given node,
     # in an iterative breadth first traversal
+
     def bft_print(self, node):
         pass
 
